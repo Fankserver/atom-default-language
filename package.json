@@ -1,8 +1,8 @@
 {
   "name": "default-language",
-  "main": "./lib/default-language",
+  "main": "./lib/index",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "Fallback language if no language can be detected",
   "repository": {
     "type": "git",
     "url": "https://github.com/Fankserver/atom-default-language"
