@@ -1,0 +1,25 @@
+{
+  "name": "default-language",
+  "main": "./lib/default-language",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fankserver/atom-default-language"
+  },
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {},
+  "bugs": {
+    "url": "https://github.com/Fankserver/atom-default-language/issues"
+  },
+  "homepage": "https://github.com/Fankserver/atom-default-language",
+  "keywords": [
+    "unkown",
+    "null",
+    "grammar",
+    "language",
+    "default"
+  ]
+}
