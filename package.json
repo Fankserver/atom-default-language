@@ -20,6 +20,7 @@
     "null",
     "grammar",
     "language",
-    "default"
+    "default",
+    "fallback"
   ]
 }
