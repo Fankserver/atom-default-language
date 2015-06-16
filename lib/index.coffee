@@ -37,9 +37,12 @@ module.exports =
 	# 				@config.defaultLanguage.enum.push grammar.name
 
 	onDidOpenFile: (event) ->
-		if event.item.getGrammar() is atom.grammars.nullGrammar
-			newGrammar = atom.config.get('default-language.defaultLanguage')
-			if newGrammar isnt 'Disabled'
-				for grammar, i in atom.grammars.grammars
-					if grammar.name.toLowerCase().indexOf(newGrammar.toLowerCase()) isnt -1
-						event.item.setGrammar(grammar)
+		# Disable it of uri is an internal page
+		if event.uri.substring(0, 7) isnt 'atom://'
+
+			if event.item.getGrammar() is atom.grammars.nullGrammar
+				newGrammar = atom.config.get('default-language.defaultLanguage')
+				if newGrammar isnt 'Disabled'
+					for grammar, i in atom.grammars.grammars
+						if grammar.name.toLowerCase().indexOf(newGrammar.toLowerCase()) isnt -1
+							event.item.setGrammar(grammar)
