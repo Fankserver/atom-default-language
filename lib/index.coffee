@@ -28,13 +28,13 @@ module.exports =
 	deactivate: ->
 		@subscriptions.dispose()
 
-	updateConfigGrammar: (grammar) ->
-		if grammar isnt undefined
-			@config.defaultLanguage.enum.push grammar.name
-		else
-			for grammar, i in atom.grammars.grammars
-				if grammar isnt atom.grammars.nullGrammar
-					@config.defaultLanguage.enum.push grammar.name
+	# updateConfigGrammar: (grammar) ->
+	# 	if grammar isnt undefined
+	# 		@config.defaultLanguage.enum.push grammar.name
+	# 	else
+	# 		for grammar, i in atom.grammars.grammars
+	# 			if grammar isnt atom.grammars.nullGrammar
+	# 				@config.defaultLanguage.enum.push grammar.name
 
 	onDidOpenFile: (event) ->
 		if event.item.getGrammar() is atom.grammars.nullGrammar
