@@ -38,7 +38,7 @@ module.exports =
 
 	onDidOpenFile: (event) ->
 		# Disable it of uri is an internal page
-		if event.uri.substring(0, 7) isnt 'atom://'
+		if event.uri?.substring(0, 7) isnt 'atom://'
 
 			if event.item.getGrammar() is atom.grammars.nullGrammar
 				newGrammar = atom.config.get('default-language.defaultLanguage')
