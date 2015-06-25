@@ -1,48 +1,55 @@
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, TextEditor} = require 'atom'
 
 module.exports =
-	subscriptions: null
+  subscriptions: null
 
-	config:
-		defaultLanguage:
-			title: 'Default language'
-			description: 'Set default language if no language is detected'
-			type: 'string'
-			default: 'Disabled'
+  config:
+    defaultLanguage:
+      title: 'Default language'
+      description: 'Set default language if no language is detected'
+      type: 'string'
+      default: 'Disabled'
 
-	activate: (state) ->
-		# Add enum after config load to prevent dataloss
-		# @config.defaultLanguage.enum = ['Disabled'];
+  activate: (state) ->
+    # Add enum after config load to prevent dataloss
+    # @config.defaultLanguage.enum = ['Disabled'];
 
-		# Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
-		@subscriptions = new CompositeDisposable
+    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+    @subscriptions = new CompositeDisposable()
 
-		# Subscribe to opening files
-		@subscriptions.add atom.workspace.onDidOpen (e) => @onDidOpenFile(e)
+    # Subscribe to opening files
+    @subscriptions.add atom.workspace.observePaneItems (item) => @checkGrammar(item)
 
-		# Register command that toggles this view
-		# @subscriptions.add atom.grammars.onDidAddGrammar (e) => @updateConfigGrammar(e)
-		# @subscriptions.add atom.grammars.onDidUpdateGrammar (e) => @updateConfigGrammar(e)
-		# @updateConfigGrammar()
+    # Trigger check grammar if all packages are loaded (custom languages)
+    @subscriptions.add atom.packages.onDidActivateInitialPackages =>
+      for item in atom.workspace.getPaneItems()
+        @checkGrammar item
 
-	deactivate: ->
-		@subscriptions.dispose()
+    # Register command that toggles this view
+    # @subscriptions.add atom.grammars.onDidAddGrammar (e) => @updateConfigGrammar(e)
+    # @subscriptions.add atom.grammars.onDidUpdateGrammar (e) => @updateConfigGrammar(e)
+    # @updateConfigGrammar()
 
-	# updateConfigGrammar: (grammar) ->
-	# 	if grammar isnt undefined
-	# 		@config.defaultLanguage.enum.push grammar.name
-	# 	else
-	# 		for grammar, i in atom.grammars.grammars
-	# 			if grammar isnt atom.grammars.nullGrammar
-	# 				@config.defaultLanguage.enum.push grammar.name
+  deactivate: ->
+    @subscriptions.dispose()
 
-	onDidOpenFile: (event) ->
-		# Disable it of uri is an internal page
-		if event.uri?.substring(0, 7) isnt 'atom://'
+  # updateConfigGrammar: (grammar) ->
+  #   if grammar isnt undefined
+  #     @config.defaultLanguage.enum.push grammar.name
+  #   else
+  #     for grammar, i in atom.grammars.grammars
+  #       if grammar isnt atom.grammars.nullGrammar
+  #         @config.defaultLanguage.enum.push grammar.name
 
-			if event.item.getGrammar() is atom.grammars.nullGrammar
-				newGrammar = atom.config.get('default-language.defaultLanguage')
-				if newGrammar isnt 'Disabled'
-					for grammar, i in atom.grammars.grammars
-						if grammar.name.toLowerCase().indexOf(newGrammar.toLowerCase()) isnt -1
-							event.item.setGrammar(grammar)
+  checkGrammar: (item) ->
+    # Enable grammar check in TextEditor only
+    if TextEditor.prototype.isPrototypeOf item
+
+      if item.getGrammar() is atom.grammars.nullGrammar
+        newGrammar = atom.config.get('default-language.defaultLanguage')
+
+        if newGrammar isnt 'Disabled'
+
+          for grammar in atom.grammars.grammars
+            if grammar.name.toLowerCase().indexOf(newGrammar.toLowerCase()) isnt -1
+              item.setGrammar(grammar)
