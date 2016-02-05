@@ -51,5 +51,6 @@ module.exports =
         if newGrammar isnt 'Disabled'
 
           for grammar in atom.grammars.grammars
-            if grammar.name.toLowerCase().indexOf(newGrammar.toLowerCase()) isnt -1
+            if grammar.name.toLowerCase().replace(/\ /g, '') is newGrammar.toLowerCase().replace(/\ /g, '')
               item.setGrammar(grammar)
+              break
